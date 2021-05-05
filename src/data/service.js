@@ -2,16 +2,23 @@ import orgBucket from './org-bucket';
 import dealBucket from './deal-bucket';
 
 class DataService {
-  getControllingOrg() {
+  emulateBucketRequest(data) {
+    console.log('[Emulation] Http request...')
+    
     return new Promise((resolve) => {
-      setTimeout(() => resolve(orgBucket), 1500);
+      setTimeout(() => {
+        console.log('[Emulation] Http request resolved...')
+        resolve(data);
+      }, 1500);
     });
   }
 
+  getControllingOrg() {
+    return this.emulateBucketRequest(orgBucket);
+  }
+
   getDeal() {
-    return new Promise((resolve) => {
-      setTimeout(() => resolve(dealBucket), 1500);
-    });
+    return this.emulateBucketRequest(dealBucket);
   }
 }
 

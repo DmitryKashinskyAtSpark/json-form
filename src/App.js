@@ -19,25 +19,30 @@ const useStyles = makeStyles((theme) =>
 const initialDataBucket = {
   data: {},
   schema: {},
-  uischema: {}
+  uischema: {},
 };
 
 function App() {
   const { appButton } = useStyles();
   const [open, setOpen] = useState(false);
+  const [isValid, setIsValid] = useState(false);
   const [bucket, setBucket] = useState(initialDataBucket);
+  
   const handleClose = () => setOpen(false);
+
   const handleOpenControllingOrg = async () => {
     setBucket(await dataService.getControllingOrg());
     setOpen(true)
   };
-  const handleOpenDeal = () => {
+
+  const handleOpenDeal = async () => {
+    setBucket(await dataService.getDeal());
     setOpen(true)
   };
-  const handleDataChange = (data, errors) => {
-    if (errors) {
-      console.error(errors);
-    }
+
+  const handleDataChange = ({data, errors}) => {
+    setIsValid(!errors.length);
+    setBucket((state) => ({ ...state, data }));
   };
 
   return (
@@ -63,7 +68,7 @@ function App() {
           <Button onClick={handleClose} color="secondary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClose} color="primary" disabled={!isValid}>
             Save
           </Button>
         </DialogActions>
